@@ -82,14 +82,11 @@ app.post("/people", async (req,res) => {
 // Update
 app.put("/people/:id", async (req, res) => {
     try {
-        
-        const updatedPerson = await People.findByIdAndUpdate(
+        res.json(await People.findByIdAndUpdate(
             req.params.id, 
             req.body, 
             {new: true}
-        );
-        res.json(updatedPerson);
-        
+        ));
         // res.json(await People.findByIdAndUpdate(req.params.id, req.body, {new: true}));
     } catch (error) {
         console.log('error: ', error);
