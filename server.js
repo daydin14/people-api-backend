@@ -46,19 +46,7 @@ app.use(express.json()); // Creates req.body from incomoing JSON request bodies
 
 // Mount Routes
 app.get("/", (req,res) => {
-    res.send("Hello World");
-});
-
-// Index
-app.get("/people", async (req,res) => {
-
-    try {
-        const people = await People.find({});
-        res.send(people);
-    } catch (error) {
-        console.log("error:", error);
-        res.send({error: "Something Went Wrong - Check Console"});
-    }
+    res.send("Hello and Welcome to the People App");
 });
 
 // Non async await version
@@ -66,38 +54,58 @@ app.get("/people", async (req,res) => {
 //     People.find({}, (err, people) => {
 //         res.send(people);
 //     });
-// });
+// });      // This Code Block is also an Index Route
+
+// Index
+app.get("/people", async (req,res) => {
+
+    try {
+        const people = await People.find({});
+        res.json(people);
+    } catch (error) {
+        console.log("error:", error);
+        res.json({error: "Something Went Wrong - Check Console"});
+    }
+});
 
 // Create
 app.post("/people", async (req,res) => {
     try {
         const person = await People.create(req.body);
-        res.send(person);
+        res.json(person);
     } catch (error) {
         console.log('error: ', error);
-        res.send({error: "Something Went Wrong - Check Console"});
+        res.json({error: "Something Went Wrong - Check Console"});
     }
-})
-// Update
+});
 
+// Update
 app.put("/people/:id", async (req, res) => {
     try {
-        res.json(await People.findByIdAndUpdate(req.params.id, req.body, {new: true}));
+        
+        const updatedPerson = await People.findByIdAndUpdate(
+            req.params.id, 
+            req.body, 
+            {new: true}
+        );
+        res.json(updatedPerson);
+        
+        // res.json(await People.findByIdAndUpdate(req.params.id, req.body, {new: true}));
     } catch (error) {
         console.log('error: ', error);
-        res.send({error: "Something Went Wrong - Check Console"});
+        res.json({error: "Something Went Wrong - Check Console"});
     }
-})
-// Delete
+});
 
+// Delete
 app.delete("/people/:id", async (req,res) => {
     try {
         res.json(await People.findByIdAndDelete(req.params.id));
     } catch (error) {
         console.log('error: ', error);
-        res.send({error: "Something Went Wrong - Check Console"});
+        res.json({error: "Something Went Wrong - Check Console"});
     }
-})
+});
 
 // Tell Express to Listen
 app.listen(PORT, () => {
